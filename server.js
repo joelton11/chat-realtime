@@ -11,11 +11,18 @@ const io = new Server(server, {
 
 app.use(express.static(path.join(__dirname, "public")));
 
+// Lista de usuários conectados
+const users = new Map();
+
 io.on("connection", (socket) => {
-  // Nome do usuário (salvo no socket)
+  // Usuário entra com nome
   socket.on("join", (name) => {
-    socket.data.name = (name || "Anônimo").trim() || "Anônimo";
-    socket.broadcast.emit("system", `${socket.data.name} entrou na sala`);
+    const userName = (name || "Anônimo").trim() || "Anônimo";
+    socket.data.name = userName;
+    users.set(socket.id, userName);
+
+    io.emit("system", `${userName} entrou na sala`);
+    io.emit("users", Array.from(users.values())); // envia lista para todos
   });
 
   // Mensagem do chat
@@ -28,7 +35,7 @@ io.on("connection", (socket) => {
     io.emit("chat", payload);
   });
 
-  // Digitando (opcional)
+  // Digitando
   socket.on("typing", (isTyping) => {
     socket.broadcast.emit("typing", {
       name: socket.data.name || "Alguém",
@@ -36,9 +43,13 @@ io.on("connection", (socket) => {
     });
   });
 
+  // Usuário saiu
   socket.on("disconnect", () => {
-    if (socket.data?.name) {
-      io.emit("system", `${socket.data.name} saiu da sala`);
+    const name = users.get(socket.id);
+    if (name) {
+      users.delete(socket.id);
+      io.emit("system", `${name} saiu da sala`);
+      io.emit("users", Array.from(users.values())); // atualiza lista
     }
   });
 });
