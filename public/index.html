@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chat em Tempo Real</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+    body { margin:0; background:#0f172a; color:#e2e8f0; display:flex; height:100vh; }
+    .wrap { margin:auto; width:min(900px, 100%); height:min(720px, 100%); display:flex; flex-direction:column; border-radius:16px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.35); border:1px solid #1f2937; }
+    header { background:#111827; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; }
+    header h1 { font-size:16px; margin:0; letter-spacing:.5px; }
+    #you { font-size:12px; opacity:.8 }
+    #log { flex:1; background:#0b1220; padding:12px; overflow:auto; scroll-behavior:smooth; }
+    .msg { margin:8px 0; line-height:1.35 }
+    .name { font-weight:600; color:#93c5fd; margin-right:6px }
+    .time { font-size:11px; opacity:.6; margin-left:6px }
+    .system { color:#a7f3d0; font-style:italic; opacity:.9 }
+    form { display:flex; gap:8px; padding:12px; background:#0f172a; border-top:1px solid #1f2937 }
+    input, button { border-radius:10px; border:1px solid #1f2937; }
+    #m { flex:1; padding:12px; background:#0b1220; color:#e2e8f0; outline:none }
+    button { padding:12px 16px; background:#2563eb; color:white; border:none; cursor:pointer }
+    button:disabled { opacity:.6; cursor:not-allowed }
+    #typing { font-size:12px; opacity:.7; padding:4px 12px }
+    /* Modal */
+    .modal { position:fixed; inset:0; background:rgba(0,0,0,.65); display:flex; align-items:center; justify-content:center }
+    .card { width:min(420px, 92%); background:#111827; border:1px solid #1f2937; border-radius:16px; padding:18px }
+    .card h2 { margin-top:0; font-size:18px }
+    .row { display:flex; gap:8px; margin-top:10px }
+    .row input { flex:1; padding:12px; background:#0b1220; color:#e2e8f0 }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>💬 Sala de Bate-Papo</h1>
+      <div id="you">Conectando…</div>
+    </header>
+
+    <div id="log" aria-live="polite"></div>
+    <div id="typing"></div>
+
+    <form id="form" autocomplete="off">
+      <input id="m" placeholder="Escreva sua mensagem..." />
+      <button id="send" type="submit">Enviar</button>
+    </form>
+  </div>
+
+  <!-- Modal para escolher nome -->
+  <div id="nameModal" class="modal" role="dialog" aria-modal="true">
+    <div class="card">
+      <h2>Como você quer aparecer no chat?</h2>
+      <div class="row">
+        <input id="nameInput" placeholder="Digite um nome" maxlength="40" />
+        <button id="joinBtn">Entrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const log = document.getElementById('log');
+    const typingEl = document.getElementById('typing');
+    const youEl = document.getElementById('you');
+    const form = document.getElementById('form');
+    const input = document.getElementById('m');
+    const modal = document.getElementById('nameModal');
+    const nameInput = document.getElementById('nameInput');
+    const joinBtn = document.getElementById('joinBtn');
+
+    const socket = io(); // mesmo host/porta
+
+    let myName = '';
+
+    function fmtTime(ts){
+      const d = new Date(ts);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function addLine(html){
+      const div = document.createElement('div');
+      div.className = 'msg';
+      div.innerHTML = html;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    // Eventos do servidor
+    socket.on('connect', () => {
+      youEl.textContent = 'Conectado';
+    });
+
+    socket.on('system', (text) => {
+      addLine(`<span class="system">• ${text}</span>`);
+    });
+
+    socket.on('chat', ({ name, msg, time }) => {
+      const safe = (msg || '').replace(/[<>&]/g, s => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[s]));
+      addLine(`<span class="name">${name}</span> ${safe} <span class="time">${fmtTime(time)}</span>`);
+    });
+
+    socket.on('typing', ({ name, isTyping }) => {
+      typingEl.textContent = isTyping ? `${name} está digitando…` : '';
+    });
+
+    // Enviar mensagem
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if(!text) return;
+      socket.emit('chat', text);
+      input.value = '';
+      socket.emit('typing', false);
+    });
+
+    // Indicador de digitando
+    let t;
+    input.addEventListener('input', () => {
+      socket.emit('typing', true);
+      clearTimeout(t);
+      t = setTimeout(() => socket.emit('typing', false), 900);
+    });
+
+    // Entrar com nome
+    joinBtn.addEventListener('click', () => {
+      myName = (nameInput.value || 'Anônimo').trim() || 'Anônimo';
+      socket.emit('join', myName);
+      youEl.textContent = `Você: ${myName}`;
+      modal.remove();
+      input.focus();
+    });
+
+    nameInput.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){ joinBtn.click(); }
+    });
+  </script>
+</body>
+</html>
