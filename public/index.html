@@ -1,51 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chat em Tempo Real</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>💬 Sala de Bate-Papo</h1>
-      <div id="you">Conectando…</div>
-    </header>
+<div class="wrap">
+  <header>
+    <h1>💬 Sala de Bate-Papo</h1>
+    <div id="you">Conectando…</div>
+  </header>
 
-    <div class="main">
-      <aside class="users">
-        <h2>👥 Online</h2>
-        <ul id="usersList"></ul>
-      </aside>
-
-      <div class="chat">
-        <div id="log" aria-live="polite"></div>
-        <div id="typing"></div>
-
-        <form id="form" autocomplete="off">
-          <input id="m" placeholder="Escreva sua mensagem..." aria-label="Mensagem">
-
-          <button id="attachBtn" type="button" aria-label="Escolher arquivo">📎</button>
-          <input id="fileInput" type="file" accept="image/*" style="display:none;">
-
-          <button id="send" type="submit" aria-label="Enviar mensagem">Enviar</button>
-        </form>
-      </div>
+  <div class="main">
+    <aside class="users">
+      <h2>👥 Online</h2>
+      <ul id="usersList"></ul>
+    </aside>
+    <div class="chat">
+      <div id="log" aria-live="polite"></div>
+      <div id="typing"></div>
+      <form id="form" autocomplete="off">
+        <input id="m" placeholder="Escreva sua mensagem..." aria-label="Mensagem" />
+        <button id="send" type="submit">Enviar</button>
+      </form>
     </div>
   </div>
+</div>
 
-  <div id="nameModal" class="modal" role="dialog" aria-modal="true">
-    <div class="card">
-      <h2>Como você quer aparecer no chat?</h2>
-      <div class="row">
-        <input id="nameInput" placeholder="Digite um nome" maxlength="40" autofocus>
-        <button id="joinBtn">Entrar</button>
-      </div>
+<div id="nameModal" class="modal" role="dialog" aria-modal="true">
+  <div class="card">
+    <h2>Como você quer aparecer no chat?</h2>
+    <div class="row">
+      <input id="nameInput" placeholder="Digite um nome" maxlength="40" autofocus />
+      <input id="passwordInput" type="password" placeholder="Senha da sala" />
+      <button id="joinBtn">Entrar</button>
     </div>
   </div>
+</div>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
