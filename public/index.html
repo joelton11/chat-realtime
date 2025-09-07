@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Chat em Tempo Real</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="wrap">
@@ -25,13 +25,10 @@
         <div id="log" aria-live="polite"></div>
         <div id="typing"></div>
         <form id="form" autocomplete="off">
-          <input id="m" placeholder="Escreva sua mensagem..." aria-label="Mensagem">
-          <div class="file-row">
-            <label for="fileInput" class="file-btn">📁 Escolher imagem</label>
-            <span id="fileName">Nenhum arquivo escolhido</span>
-          </div>
-          <input id="fileInput" type="file" accept="image/*" style="display:none;">
-          <button id="send" type="submit" aria-label="Enviar mensagem">Enviar</button>
+          <input id="m" placeholder="Escreva sua mensagem..." aria-label="Mensagem" />
+          <input type="file" id="fileInput" accept="image/*" />
+          <button type="button" id="sendFile">📎</button>
+          <button id="send" type="submit">Enviar</button>
         </form>
       </div>
     </div>
@@ -42,7 +39,7 @@
     <div class="card">
       <h2>Como você quer aparecer no chat?</h2>
       <div class="row">
-        <input id="nameInput" placeholder="Digite um nome" maxlength="40" autofocus>
+        <input id="nameInput" placeholder="Digite um nome" maxlength="40" autofocus />
         <button id="joinBtn">Entrar</button>
       </div>
     </div>
