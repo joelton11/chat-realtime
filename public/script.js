@@ -5,73 +5,85 @@ const form = document.getElementById('form');
 const input = document.getElementById('m');
 const modal = document.getElementById('nameModal');
 const nameInput = document.getElementById('nameInput');
-const passwordInput = document.getElementById('passwordInput');
 const joinBtn = document.getElementById('joinBtn');
 const usersList = document.getElementById('usersList');
+const fileInput = document.getElementById('fileInput');
 
 const socket = io();
 let myName = '';
-let isAdmin = false;
 
-function fmtTime(ts){
+function fmtTime(ts) {
   const d = new Date(ts);
   return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-function addMsg({ name, msg, time }){
+function addMsg({ name, msg, file, time }) {
   const div = document.createElement('div');
-  const safe = (msg || '').replace(/[<>&]/g, s => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[s]));
   div.className = 'msg ' + (name === myName ? 'me' : 'other');
-  div.innerHTML = `<span>${safe}</span><div class="meta">${name} • ${fmtTime(time)}</div>`;
+
+  if (file) {
+    let content;
+    if (file.type.startsWith("image/")) {
+      content = `<img src="${file.data}" alt="imagem" style="max-width:200px;border-radius:8px;" />`;
+    } else {
+      content = `<a href="${file.data}" download="${file.name}">📎 ${file.name}</a>`;
+    }
+    div.innerHTML = `${content}<div class="meta">${name} • ${fmtTime(time)}</div>`;
+  } else {
+    const safe = (msg || '').replace(/[<>&]/g, s => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[s]));
+    div.innerHTML = `<span>${safe}</span><div class="meta">${name} • ${fmtTime(time)}</div>`;
+  }
+
   log.appendChild(div);
-  div.scrollIntoView({ behavior:'smooth' });
+  div.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Atualizar lista de usuários
-function updateUsers(list){
+function updateUsers(list) {
   usersList.innerHTML = '';
   list.forEach(u => {
     const li = document.createElement('li');
     li.textContent = u;
-    if(u === myName) li.className = 'you';
-    if(isAdmin && u !== "ADM") {
-      const btn = document.createElement('button');
-      btn.textContent = "❌";
-      btn.style.marginLeft = "8px";
-      btn.onclick = () => socket.emit("kick", u);
-      li.appendChild(btn);
-    }
+    if (u === myName) li.className = 'you';
     usersList.appendChild(li);
   });
 }
 
-// Eventos do servidor
+// Eventos
 socket.on('connect', () => { youEl.textContent = 'Conectado'; });
 socket.on('system', (text) => {
   const div = document.createElement('div');
   div.className = 'system';
   div.textContent = `• ${text}`;
   log.appendChild(div);
-  div.scrollIntoView({ behavior:'smooth' });
+  div.scrollIntoView({ behavior: 'smooth' });
 });
 socket.on('chat', (data) => addMsg(data));
 socket.on('typing', ({ name, isTyping }) => {
   typingEl.textContent = isTyping ? `${name} está digitando…` : '';
 });
 socket.on('users', (list) => updateUsers(list));
-socket.on('kicked', () => {
-  alert("Você foi expulso da sala pelo ADM!");
-  location.reload();
-});
 
-// Enviar mensagem
+// Enviar texto
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   const text = input.value.trim();
-  if(!text) return;
-  socket.emit('chat', text);
-  input.value = '';
-  socket.emit('typing', false);
+  if (text) {
+    socket.emit('chat', { msg: text });
+    input.value = '';
+    socket.emit('typing', false);
+  }
+});
+
+// Enviar arquivo
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    socket.emit('chat', { file: { name: file.name, type: file.type, data: reader.result } });
+  };
+  reader.readAsDataURL(file);
+  fileInput.value = "";
 });
 
 // Digitando
@@ -82,20 +94,15 @@ input.addEventListener('input', () => {
   t = setTimeout(() => socket.emit('typing', false), 900);
 });
 
-// Entrar com nome e senha da sala
+// Entrar
 joinBtn.addEventListener('click', () => {
   myName = (nameInput.value || 'Anônimo').trim() || 'Anônimo';
-  const password = passwordInput.value;
-  isAdmin = myName === "ADM";
-  socket.emit('join', { name: myName, password });
-  youEl.textContent = `Você: ${myName}${isAdmin ? " (ADM)" : ""}`;
+  socket.emit('join', { name: myName });
+  youEl.textContent = `Você: ${myName}`;
   modal.remove();
   input.focus();
 });
 
 nameInput.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter'){ joinBtn.click(); }
-});
-passwordInput.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter'){ joinBtn.click(); }
+  if (e.key === 'Enter') joinBtn.click();
 });
