@@ -1,46 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bate-Papo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat em Tempo Real</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>Bate-Papo</h1>
-    <div id="you">Conectando…</div>
-  </header>
-
-  <div class="main">
-    <aside class="users">
-      <h2>👥 Online</h2>
-      <ul id="usersList"></ul>
-    </aside>
-    <div class="chat">
-      <div id="log" aria-live="polite"></div>
-      <div id="typing"></div>
-      <form id="form" autocomplete="off">
-        <label for="fileInput" id="fileLabel">📎</label>
-        <input type="file" id="fileInput" />
-        <input id="m" placeholder="Escreva sua mensagem..." aria-label="Mensagem" />
-        <button id="send" type="submit">Enviar</button>
-      </form>
-    </div>
+  <div id="login">
+    <h2>Bem-vindo ao Chat 💬</h2>
+    <input id="nameInput" placeholder="Digite seu nome">
+    <button id="joinBtn">Entrar</button>
   </div>
-</div>
 
-<div id="nameModal" class="modal" role="dialog" aria-modal="true">
-  <div class="card">
-    <div class="row">
-      <input id="nameInput" placeholder="Digite um nome" maxlength="40" autofocus />
-      <button id="joinBtn">Entrar</button>
-    </div>
+  <div id="chat" class="hidden">
+    <ul id="messages"></ul>
+    <form id="form">
+      <input id="input" autocomplete="off" placeholder="Digite sua mensagem..." />
+      <input type="file" id="file" />
+      <button>Enviar</button>
+    </form>
   </div>
-</div>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="script.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

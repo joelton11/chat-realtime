@@ -35,24 +35,16 @@ io.on("connection", (socket) => {
     io.emit("chat", payload);
   });
 
-  // Upload de imagem/arquivo
+  // Upload de arquivo/imagem
   socket.on("file", ({ fileName, fileData }) => {
     const payload = {
       name: socket.data.name || "Anônimo",
       fileName,
-      fileData, // base64
+      fileData,
       type: "file",
       time: Date.now()
     };
     io.emit("chat", payload);
-  });
-
-  // Digitando...
-  socket.on("typing", (isTyping) => {
-    socket.broadcast.emit("typing", {
-      name: socket.data.name || "Alguém",
-      isTyping: !!isTyping
-    });
   });
 
   // Usuário saiu

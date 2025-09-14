@@ -1,45 +1,51 @@
 const socket = io();
+
+const loginDiv = document.getElementById("login");
+const chatDiv = document.getElementById("chat");
+const joinBtn = document.getElementById("joinBtn");
+const nameInput = document.getElementById("nameInput");
+const messages = document.getElementById("messages");
 const form = document.getElementById("form");
 const input = document.getElementById("input");
-const messages = document.getElementById("messages");
 const fileInput = document.getElementById("file");
 
-// Entrar na sala
-const name = prompt("Digite seu nome:") || "Anônimo";
-socket.emit("join", { name });
+let userName = "";
 
-// Receber mensagens normais
+// Entrar na sala
+joinBtn.addEventListener("click", () => {
+  userName = nameInput.value.trim() || "Anônimo";
+  socket.emit("join", { name: userName });
+  loginDiv.classList.add("hidden");
+  chatDiv.classList.remove("hidden");
+});
+
+// Receber mensagens
 socket.on("chat", (data) => {
   const item = document.createElement("li");
 
   if (data.type === "text") {
-    // Texto normal
     item.innerHTML = `<strong>${data.name}:</strong> ${data.msg}`;
   } else if (data.type === "file") {
-    // Arquivos e imagens
     if (data.fileData.startsWith("data:image")) {
-      // Imagem
       item.innerHTML = `<strong>${data.name}:</strong><br>
         <img src="${data.fileData}" alt="${data.fileName}" style="max-width:200px; border-radius:8px;">`;
     } else {
-      // Arquivo para download
       item.innerHTML = `<strong>${data.name}:</strong> 
         <a href="${data.fileData}" download="${data.fileName}">📎 ${data.fileName}</a>`;
     }
   }
 
   messages.appendChild(item);
-  window.scrollTo(0, document.body.scrollHeight);
+  messages.scrollTop = messages.scrollHeight;
 });
 
-// Receber mensagens do sistema (entrar/sair)
+// Mensagens do sistema
 socket.on("system", (msg) => {
   const item = document.createElement("li");
-  item.style.color = "gray";
-  item.style.fontStyle = "italic";
+  item.className = "system";
   item.textContent = `• ${msg}`;
   messages.appendChild(item);
-  window.scrollTo(0, document.body.scrollHeight);
+  messages.scrollTop = messages.scrollHeight;
 });
 
 // Enviar mensagem de texto
