@@ -1,65 +1,135 @@
-body {
-  font-family: Arial, sans-serif;
+/* Reset */
+* {
   margin: 0;
   padding: 0;
-  background: #f2f2f2;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #5e60ce, #48bfe3);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 #login, #chat {
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  width: 90%;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
 }
 
-.hidden { display: none; }
+/* Login */
+#login h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#nameInput {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  margin-bottom: 15px;
+}
+
+#joinBtn {
+  width: 100%;
+  padding: 10px;
+  background: #4ea8de;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#joinBtn:hover {
+  background: #3a86ff;
+}
+
+/* Chat */
+.hidden {
+  display: none;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+#logoutBtn {
+  background: #ef233c;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+#logoutBtn:hover {
+  background: #d90429;
+}
 
 #messages {
   list-style: none;
-  padding: 0;
-  margin: 0 0 20px 0;
-  max-height: 400px;
+  max-height: 350px;
   overflow-y: auto;
+  margin-bottom: 15px;
+  padding-right: 5px;
 }
 
 #messages li {
-  padding: 5px 10px;
-  margin-bottom: 5px;
-  border-radius: 5px;
-}
-
-#messages li:nth-child(odd) {
-  background: #f9f9f9;
+  background: rgba(255, 255, 255, 0.2);
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
 }
 
 #form {
   display: flex;
-  gap: 5px;
+  align-items: center;
+  gap: 8px;
 }
 
 #input {
   flex: 1;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+.file-label {
+  cursor: pointer;
+  font-size: 20px;
 }
 
 button {
   padding: 10px 15px;
+  background: #00b4d8;
   border: none;
-  background: #007BFF;
+  border-radius: 8px;
   color: white;
-  border-radius: 5px;
   cursor: pointer;
+  transition: 0.3s;
 }
 
 button:hover {
-  background: #0056b3;
+  background: #0077b6;
 }
 
 .system {
-  color: gray;
   font-style: italic;
+  color: #d9d9d9;
+  text-align: center;
 }
