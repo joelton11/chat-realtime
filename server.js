@@ -19,7 +19,7 @@ io.on("connection", (socket) => {
     socket.data.name = userName;
 
     users.set(socket.id, userName);
-    io.emit("system", `${userName} entrou na sala 👋`);
+    io.emit("system", `${userName} entrou na sala`);
     io.emit("users", Array.from(users.values()));
   });
 
@@ -48,7 +48,7 @@ io.on("connection", (socket) => {
     const name = users.get(socket.id);
     if (name) {
       users.delete(socket.id);
-      io.emit("system", `${name} saiu da sala 👋`);
+      io.emit("system", `${name} saiu da sala`);
       io.emit("users", Array.from(users.values()));
     }
   });
