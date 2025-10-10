@@ -7,7 +7,9 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #5e60ce, #48bfe3);
+  background: linear-gradient(-45deg, #48bfe3, #5e60ce, #4ea8de, #3a86ff);
+  background-size: 400% 400%;
+  animation: gradientMove 10s ease infinite;
   color: #fff;
   display: flex;
   justify-content: center;
@@ -15,44 +17,65 @@ body {
   height: 100vh;
 }
 
-#login, #chat {
-  width: 90%;
-  max-width: 500px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 25px;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-/* Login */
-#login h2 {
+/* Login moderno */
+#login {
+  width: 90%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 35px 25px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
   text-align: center;
-  margin-bottom: 20px;
+  animation: fadeIn 0.8s ease;
+}
+
+#login h2 {
+  font-size: 1.8em;
+  color: #fff;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
 }
 
 #nameInput {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   outline: none;
-  margin-bottom: 15px;
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-size: 1em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#nameInput::placeholder {
+  color: #eee;
 }
 
 #joinBtn {
   width: 100%;
-  padding: 10px;
-  background: #4ea8de;
-  color: white;
+  padding: 12px;
+  background: linear-gradient(90deg, #48bfe3, #5e60ce);
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
+  font-weight: bold;
+  color: #fff;
+  font-size: 1em;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 #joinBtn:hover {
-  background: #3a86ff;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(72, 191, 227, 0.5);
 }
 
 /* Chat */
@@ -88,11 +111,33 @@ body {
   padding-right: 5px;
 }
 
-#messages li {
+.message {
   background: rgba(255, 255, 255, 0.2);
   margin-bottom: 10px;
   padding: 8px 12px;
   border-radius: 10px;
+  max-width: 75%;
+  word-wrap: break-word;
+  animation: fadeIn 0.3s ease;
+}
+
+.message.mine {
+  background: #4ea8de;
+  color: #fff;
+  margin-left: auto;
+  border-bottom-right-radius: 2px;
+}
+
+.message.other {
+  background: rgba(255, 255, 255, 0.2);
+  margin-right: auto;
+  border-bottom-left-radius: 2px;
+}
+
+.time {
+  font-size: 0.8em;
+  opacity: 0.7;
+  margin-left: 8px;
 }
 
 #form {
@@ -132,4 +177,23 @@ button:hover {
   font-style: italic;
   color: #d9d9d9;
   text-align: center;
+}
+
+/* Transições */
+.fade-out {
+  animation: fadeOut 0.6s forwards;
+}
+
+.fade-in {
+  animation: fadeIn 0.6s forwards;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }

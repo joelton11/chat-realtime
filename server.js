@@ -14,7 +14,6 @@ app.use(express.static(path.join(__dirname, "public")));
 const users = new Map();
 
 io.on("connection", (socket) => {
-  // Usuário entrou
   socket.on("join", ({ name }) => {
     const userName = (name || "Anônimo").trim() || "Anônimo";
     socket.data.name = userName;
@@ -24,7 +23,6 @@ io.on("connection", (socket) => {
     io.emit("users", Array.from(users.values()));
   });
 
-  // Mensagem de texto
   socket.on("chat", (msg) => {
     const payload = {
       name: socket.data.name || "Anônimo",
@@ -35,7 +33,6 @@ io.on("connection", (socket) => {
     io.emit("chat", payload);
   });
 
-  // Upload de arquivo/imagem
   socket.on("file", ({ fileName, fileData }) => {
     const payload = {
       name: socket.data.name || "Anônimo",
@@ -47,7 +44,6 @@ io.on("connection", (socket) => {
     io.emit("chat", payload);
   });
 
-  // Usuário saiu
   socket.on("disconnect", () => {
     const name = users.get(socket.id);
     if (name) {
