@@ -3,26 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat em Tempo Real</title>
-  <link rel="stylesheet" href="css/chat.css">
+  <title>Bem-vindo ao Chat</title>
+  <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
-  <div id="chat">
-    <div class="chat-header">
-      <h3>Chat em Tempo Real</h3>
-      <div id="userList"></div>
-      <button id="logoutBtn">Sair</button>
-    </div>
-    <ul id="messages"></ul>
-    <form id="form">
-      <input id="input" autocomplete="off" placeholder="Digite sua mensagem..." />
-      <label for="file" class="file-label">📎</label>
-      <input type="file" id="file" hidden />
-      <button>Enviar</button>
-    </form>
+  <div id="login">
+    <h2>Bem-vindo ao Chat</h2>
+    <input id="nameInput" placeholder="Digite seu nome..." />
+    <button id="joinBtn">Entrar</button>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="js/chat.js"></script>
+  <script src="js/login.js"></script>
 </body>
 </html>
