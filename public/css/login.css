@@ -1,0 +1,47 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(-45deg, #48bfe3, #5e60ce, #4ea8de, #3a86ff);
+  background-size: 400% 400%;
+  animation: gradientMove 10s ease infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #fff;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+#login {
+  width: 90%;
+  max-width: 400px;
+  background: rgba(255,255,255,0.15);
+  padding: 35px 25px;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  text-align: center;
+}
+
+#login h2 { margin-bottom: 25px; }
+
+#nameInput {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+}
+
+#joinBtn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg,#48bfe3,#5e60ce);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
